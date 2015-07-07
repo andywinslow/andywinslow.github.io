@@ -14,7 +14,8 @@ gadgets.util.registerOnLoadHandler(fetchIssues);
 
 function fetchIssues() {
   // Using Jira REST API, search for unreleased issues with a fixVersion
-  var url = '__ATLASSIAN_BASE_URL__/rest/api/2/search?maxResults=1000&fields=fixVersions&jql=category%20%3D%20"Software%20Development"%20AND%20issuetype%20!%3D%20Sub-task%20AND%20fixVersion%20is%20not%20EMPTY%20AND%20fixVersion%20not%20in%20releasedVersions()%20AND%20status%20in%20(Developing%2C%20"Development%20Complete"%2C%20Testing%2C%20Accepting%2C%20"Waiting%20to%20Deploy")%20ORDER%20BY%20project%2C%20fixVersion';
+  var protocolHostPort = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+  var url = protocolHostPort + '/rest/api/2/search?maxResults=1000&fields=fixVersions&jql=category%20%3D%20"Software%20Development"%20AND%20issuetype%20!%3D%20Sub-task%20AND%20fixVersion%20is%20not%20EMPTY%20AND%20fixVersion%20not%20in%20releasedVersions()%20AND%20status%20in%20(Developing%2C%20"Development%20Complete"%2C%20Testing%2C%20Accepting%2C%20"Waiting%20to%20Deploy")%20ORDER%20BY%20project%2C%20fixVersion';
 
   // Construct request parameters object
   var params = {};
