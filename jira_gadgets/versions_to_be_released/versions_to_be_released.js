@@ -30,32 +30,26 @@ function fetchIssues() {
 function handleResponse(obj) {
   var jsonResponse = JSON.parse(obj.text)
   // obj.data contains a Document DOM element
-  // parsed from the XML that was requested
+  // parsed from the JSON that was requested
 
-  // Process the DOM data into a JavaScript object
-  var jiraIssues = {
-    title : "Versions to be Released",
-    items : getItems(jsonResponse)
-  };
-  renderJiraIssues(jiraIssues);
+  renderJiraIssues(getIssues(jsonResponse));
 
   msg.dismissMessage(loadMessage);
   gadgets.window.adjustHeight();
 }
 
-function getItems(jsonResponse) {
+function getIssues(jsonResponse) {
   // Items to return
-  var items = [];
-  var itemNodes = jsonResponse.issues;
+  var versions = [];
+  var issues = jsonResponse.issues;
   // Loop through all <item> nodes
-  for (var i = 0; i < itemNodes.length && i < numEntries; i++) {
-    var item = {};
-    item.name = itemNodes[i].key;
-    item.link = itemNodes[i].self;
-    item.description = itemNodes[i].fields.fixVersions[0].name;
-    items.push(item);
+  for (var i = 0; i < issues.length && i < numEntries; i++) {
+    var version = {};
+    version.version = issues[i].fields.fixVersions[0].name;
+    version.releaseDate = issues[i].fields.fixVersions[0].releaseDate;
+    versions.push(version);
   }
-  return items;
+  return versions;
 }
 
 function isElement(node) {
@@ -63,31 +57,12 @@ function isElement(node) {
 }
 
 function renderJiraIssues(jiraIssues) {
-  var html =
-      "<div class='title'>" +
-      jiraIssues.title +
-      "</div>";
-  for (var i = 0; i < jiraIssues.items.length; i++) {
-    var item = jiraIssues.items[i];
-    html +=
-        "<div class='jira-item'>" +
-        "<a target='_blank' href='" + item.link + "'>" +
-        item.name +
-        "</a>";
-    if (showDate) {
-      html +=
-          "<div class='jira-item-date'>" +
-          item.date +
-          "</div>";
-    }
-    if (showSummary) {
-      html +=
-          "<div class='jira-item-desc'>" +
-          item.desc +
-          "</div>";
-    }
-    html += "</div>";
+  var html = "<table><thead><tr><th>Version</th><th>Release Date</th></tr></thead>";
+  for (var i = 0; i < jiraIssues.length; i++) {
+    var issue = jiraIssues[i];
+    html += "<tr><td>" + issue.version + "</td><td>" + issue.releaseDate +"</td></tr>";
   }
+  html += "</table>"
 
   document.getElementById('content_div').innerHTML = html;
 }
