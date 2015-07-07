@@ -52,7 +52,7 @@ function getItems(jsonResponse) {
     var item = {};
     item.name = itemNodes[i].key;
     item.link = itemNodes[i].self;
-    item.description = itemNodes[i].fixVersions[0].name;
+    item.description = itemNodes[i].fields.fixVersions[0].name;
     items.push(item);
   }
   return items;
