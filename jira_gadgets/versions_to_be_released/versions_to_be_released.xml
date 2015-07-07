@@ -29,11 +29,11 @@
 
   <Content type="html"><![CDATA[
     <link rel="stylesheet"
-      href="https://andywinslow.bitbucket.org/jira_gadgets/versions_to_be_released/versions_to_be_released.css">
+      href="https://andywinslow.github.io/jira_gadgets/versions_to_be_released/versions_to_be_released.css">
 
     <div id="content_div"></div>
 
     <script type="text/javascript"
-      src="https://andywinslow.bitbucket.org/jira_gadgets/versions_to_be_released/versions_to_be_released.js"></script>
+      src="https://andywinslow.github.io/jira_gadgets/versions_to_be_released/versions_to_be_released.js"></script>
   ]]></Content>
 </Module>
