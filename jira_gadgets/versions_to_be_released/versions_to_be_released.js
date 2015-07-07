@@ -5,9 +5,6 @@ var loadMessage = msg.createStaticMessage("loading...");
 
 // Get configured user prefs
 var prefs = new gadgets.Prefs();
-var showDate = prefs.getBool("show_date");
-var showSummary = prefs.getBool("show_summ");
-var numEntries = prefs.getInt("num_entries");
 
 // Fetch issues when the gadget loads
 gadgets.util.registerOnLoadHandler(fetchIssues);
@@ -43,7 +40,7 @@ function getIssues(jsonResponse) {
   var versions = [];
   var issues = jsonResponse.issues;
   // Loop through all <item> nodes
-  for (var i = 0; i < issues.length && i < numEntries; i++) {
+  for (var i = 0; i < issues.length ; i++) {
     var version = {};
     version.version = issues[i].fields.fixVersions[0].name;
     version.releaseDate = issues[i].fields.fixVersions[0].releaseDate;
