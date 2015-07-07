@@ -37,14 +37,14 @@ function handleResponse(obj) {
 
 function getIssues(jsonResponse) {
   // Items to return
-  var versions = [];
+  var versions = {};
   var issues = jsonResponse.issues;
   // Loop through all <item> nodes
   for (var i = 0; i < issues.length ; i++) {
     var version = {};
     version.version = issues[i].fields.fixVersions[0].name;
     version.releaseDate = issues[i].fields.fixVersions[0].releaseDate;
-    versions.push(version);
+    versions[version.version] = version;
   }
   return versions;
 }
@@ -53,10 +53,11 @@ function isElement(node) {
   return node.nodeType == 1;
 }
 
-function renderJiraIssues(jiraIssues) {
+function renderJiraIssues(versions) {
   var html = "<table><thead><tr><th>Version</th><th>Release Date</th></tr></thead>";
-  for (var i = 0; i < jiraIssues.length; i++) {
-    var issue = jiraIssues[i];
+
+  for(var key in versions) {
+    var issue = versions[key];
     html += "<tr><td>" + issue.version + "</td><td>" + issue.releaseDate +"</td></tr>";
   }
   html += "</table>"
