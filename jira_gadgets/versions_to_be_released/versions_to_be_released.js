@@ -15,7 +15,7 @@ gadgets.util.registerOnLoadHandler(fetchIssues);
 function fetchIssues() {
   // Using Jira REST API, search for unreleased issues with a fixVersion
   var protocolHostPort = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
-  var url = protocolHostPort + '/rest/api/2/search?maxResults=1000&fields=fixVersions&filter=11993';
+  var url = protocolHostPort + '/rest/api/2/search?maxResults=1000&fields=fixVersions&jql=category%20%3D%20%22Software%20Development%22%20AND%20issuetype%20!%3D%20Sub-task%20AND%20fixVersion%20is%20not%20EMPTY%20AND%20fixVersion%20not%20in%20releasedVersions()%20AND%20status%20in%20(Developing%2C%20%22Development%20Complete%22%2C%20Testing%2C%20Accepting%2C%20%22Waiting%20to%20Deploy%22)%20ORDER%20BY%20project%2C%20fixVersion';
 
   // Construct request parameters object
   var params = {};
@@ -28,14 +28,14 @@ function fetchIssues() {
 }
 
 function handleResponse(obj) {
+  var jsonResponse = JSON.parse(obj.text)
   // obj.data contains a Document DOM element
   // parsed from the XML that was requested
-  var domData = obj.data;
 
   // Process the DOM data into a JavaScript object
   var jiraIssues = {
-    title : getTitle(domData),
-    items : getItems(domData)
+    title : "Versions to be Released",
+    items : getItems(jsonResponse)
   };
   renderJiraIssues(jiraIssues);
 
@@ -43,47 +43,16 @@ function handleResponse(obj) {
   gadgets.window.adjustHeight();
 }
 
-function getTitle(domData) {
-  // Return the feed title
-  // This function just grabs the first element named "title"
-  var titles = domData.getElementsByTagName("title");
-  return titles.item(0).firstChild.nodeValue;
-}
-
-function getItems(domData) {
+function getItems(jsonResponse) {
   // Items to return
   var items = [];
-  // Get a list of the <item> element nodes in the file
-  var itemNodes = domData.getElementsByTagName("item");
+  var itemNodes = jsonResponse.issues;
   // Loop through all <item> nodes
   for (var i = 0; i < itemNodes.length && i < numEntries; i++) {
     var item = {};
-
-    // For each <item> node, get child nodes.
-    var childNodes = itemNodes.item(i).childNodes;
-    // Loop through child nodes.
-    for (var j = 0; j < childNodes.length ; j++) {
-      // Extract data from title, description, link,
-      // and updated date child nodes
-      var childNode = childNodes.item(j);
-      if (!isElement(childNode) || !childNode.firstChild) {
-        continue;
-      }
-      switch (childNode.nodeName) {
-        case "title":
-          item.name = childNode.firstChild.nodeValue;
-          break;
-        case "description":
-          item.desc = childNode.firstChild.nodeValue;
-          break;
-        case "link":
-          item.link = childNode.firstChild.nodeValue;
-          break;
-        case "updated":
-          item.date = childNode.firstChild.nodeValue;
-          break;
-      }
-    }
+    item.name = itemNodes[i].key;
+    item.link = itemNodes[i].self;
+    item.description = itemNodes[i].fixVersions[0].name;
     items.push(item);
   }
   return items;
