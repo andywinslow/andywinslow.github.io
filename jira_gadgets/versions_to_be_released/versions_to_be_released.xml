@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs
+      title="Versions to be Released"
+      author="Andy Winslow"
+      thumbnail="versions_to_be_released.png"
+      description="A list of the versions which probably need to be released.">
+
+    <Require feature="minimessage" />
+    <Require feature="dynamic-height" />
+
+  </ModulePrefs>
+
+  <UserPref
+      name="show_date"
+      display_name="Show Dates?"
+      datatype="bool"
+      default_value="true"/>
+  <UserPref
+      name="show_summ"
+      display_name="Show Summaries?"
+      datatype="bool"
+      default_value="true"/>
+  <UserPref
+      name="num_entries"
+      display_name="Number of Entries:"
+      default_value="5"
+      required="true"/>
+
+  <Content type="html"><![CDATA[
+    <link rel="stylesheet"
+      href="http://10.0.3.220:8080/versions_to_be_released/versions_to_be_released.css">
+
+    <div id="content_div"></div>
+
+    <script type="text/javascript"
+      src="http://10.0.3.220:8080/versions_to_be_released/versions_to_be_released.js"></script>
+  ]]></Content>
+</Module>
